@@ -17,8 +17,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with tum_ardrone.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
- 
+
+
 #include "EstimationNode.h"
 #include "ros/ros.h"
 #include "ros/package.h"
@@ -366,9 +366,22 @@ void EstimationNode::publishTf(TooN::SE3<> trans, ros::Time stamp, int seq, std:
 
 
 	tf::Transform tr = tf::Transform(m,v);
-	tf::StampedTransform t = tf::StampedTransform(tr,stamp,"map",system);
-	tf_broadcaster.sendTransform(t);
 
+    std::string namespace_ = ros::this_node::getNamespace();
+    std::string node_ = ros::this_node::getName();
+    std::string tf_prefix_;
+
+    std::string param_ = namespace_ + "/" + node_ + "/" + "tf_prefix";
+    std::string map_ = "map";
+
+    if (nh.hasParam(param_)) {
+        if (ros::param::get(param_, tf_prefix_)) {
+            map_ = tf_prefix_ + map_;
+        }
+    }
+
+    tf::StampedTransform t = tf::StampedTransform(tr,stamp,map_,system);
+    tf_broadcaster.sendTransform(t);
 
 
 	if(logfilePTAMRaw != NULL)
