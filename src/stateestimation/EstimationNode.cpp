@@ -374,10 +374,8 @@ void EstimationNode::publishTf(TooN::SE3<> trans, ros::Time stamp, int seq, std:
     std::string param_ = namespace_ + "/" + node_ + "/" + "tf_prefix";
     std::string map_ = "map";
 
-    if (nh.hasParam(param_)) {
-        if (ros::param::get(param_, tf_prefix_)) {
-            map_ = tf_prefix_ + map_;
-        }
+    if (ros::param::get(param_, tf_prefix_)) {
+        map_ = tf_prefix_ + map_;
     }
 
     tf::StampedTransform t = tf::StampedTransform(tr,stamp,map_,system);
