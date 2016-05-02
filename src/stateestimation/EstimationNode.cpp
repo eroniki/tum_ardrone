@@ -371,15 +371,15 @@ void EstimationNode::publishTf(TooN::SE3<> trans, ros::Time stamp, int seq, std:
     std::string node_ = ros::this_node::getName();
     std::string tf_prefix_;
 
-    std::string param_ = namespace_ + "/" + node_ + "/" + "tf_prefix";
-    std::string map_ = "map";
-    std::cout<<param_<<std::endl;
+    std::string param_ = node_  + "/tf_prefix";
+    std::string map_ = "/map";
+    // std::cout<<param_<<std::endl;
 
     if (ros::param::get(param_, tf_prefix_)) {
         map_ = tf_prefix_ + map_;
     }
-
-    tf::StampedTransform t = tf::StampedTransform(tr,stamp,map_,system);
+    // std::cout<<map_<<std::endl;
+    tf::StampedTransform t = tf::StampedTransform(tr,stamp,map_,tf_prefix_ + "/" +system);
     tf_broadcaster.sendTransform(t);
 
 
